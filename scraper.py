@@ -2,24 +2,41 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
-# Set up the Chrome WebDriver
+# Initialize the WebDriver
 driver = webdriver.Chrome()
 
-# Open the target URL
-driver.get("https://www.skokka.in/call-girls/kolkata/")
-time.sleep(2)  # Let the page load completely
+# URL template to iterate through pages
+url_template = "https://www.skokka.in/call-girls/kolkata/?p={}"
 
-# Find all the item cards
-item_cards = driver.find_elements(By.CLASS_NAME, 'item-card')
+# List to store all the links
+all_links = []
 
-# Extract and print the links from each card
-for card in item_cards:
-    try:
-        link_element = card.find_element(By.CSS_SELECTOR, 'a.line-clamp')
-        link = link_element.get_attribute('href')
-        print(link)
-    except:
-        continue  # If there's any issue finding the link, skip to the next card
+# Iterate through the first 30 pages
+for page in range(1, 5):
+    # Open the URL for the current page
+    driver.get(url_template.format(page))
+    time.sleep(2)  # Wait for the page to load
+    
+    # Find all the element cards
+    cards = driver.find_elements(By.CLASS_NAME, "item-card")
+    
+    # Extract and store the links from each card
+    for card in cards:
+        link = card.find_element(By.CSS_SELECTOR, ".listing-title.item-title a").get_attribute("href")
+        all_links.append(link)
+    
+    print(f"Collected links from page {page}")
+
+
+#Start visting each page
+for link in all_links:
+    print(link)
+    driver.get(link)
+    time.sleep(2)
+
+
+
 
 # Close the WebDriver
-driver.close()
+driver.quit()
+
