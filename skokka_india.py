@@ -15,7 +15,7 @@ all_links = []
 phone_numbers = []
 
 # Loop through pages
-for page in range(1, 3):
+for page in range(1, 31):
     driver.get(url_template.format(page))
     time.sleep(1)
     
@@ -49,14 +49,15 @@ for link in all_links:
     else:
         print("No phone number found in the title")
 
-# Save data to CSV
-csv_file = "extracted_data.csv"
-with open(csv_file, mode='w', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file)
-    writer.writerow(["Location", "Number"])
-    writer.writerows(phone_numbers)
 
 # Close the WebDriver
 driver.quit()
+
+# Save the data to a CSV file
+csv_file = "skokka_india.csv"
+with open(csv_file, mode='w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(["Location", "Number"])  # Write the header
+    writer.writerows(phone_numbers)  # Write the data
 
 print(f"Data successfully saved to {csv_file}")
