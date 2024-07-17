@@ -6,8 +6,6 @@ import re
 
 # Initialize the WebDriver
 driver = webdriver.Chrome()
-
-# URL template for pagination
 url_template = "https://www.skokka.in/call-girls/?p={}"
 
 # List to store all links
@@ -25,9 +23,6 @@ for page in range(1, 31):
         link = card.find_element(By.CSS_SELECTOR, ".listing-title.item-title a").get_attribute("href")
         all_links.append(link)
 
-# List to store data
-data = []
-
 # Visit each link and extract data
 for link in all_links:
     driver.get(link)
@@ -36,6 +31,7 @@ for link in all_links:
     # Get the title of the page
     title = driver.title
 
+    # Get the location of the page
     location_element = driver.find_element(By.CSS_SELECTOR, ".detail.tagcard .badge-pill.notranslate")
     location = location_element.text.split(" / ")[0]
 
@@ -49,15 +45,13 @@ for link in all_links:
     else:
         print("No phone number found in the title")
 
-
-# Close the WebDriver
 driver.quit()
 
 # Save the data to a CSV file
 csv_file = "skokka_india.csv"
 with open(csv_file, mode='w', newline='') as file:
     writer = csv.writer(file)
-    writer.writerow(["Location", "Number"])  # Write the header
-    writer.writerows(phone_numbers)  # Write the data
+    writer.writerow(["Location", "Number"])
+    writer.writerows(phone_numbers)
 
 print(f"Data successfully saved to {csv_file}")
